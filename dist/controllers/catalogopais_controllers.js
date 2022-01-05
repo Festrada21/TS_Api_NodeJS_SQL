@@ -8,16 +8,27 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteCatalogopais = exports.putCatalogopais = exports.postCatalogopais = exports.getCatalogopais = exports.getCatalogopaises = void 0;
+const catalogopais_1 = __importDefault(require("../models/catalogopais"));
 //TODO: crear los controladores
 const getCatalogopaises = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.json({ msg: "getCatalogopaises" });
+    const pais = yield catalogopais_1.default.findAll();
+    res.json({ pais });
 });
 exports.getCatalogopaises = getCatalogopaises;
 const getCatalogopais = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    res.json({ msg: "getCatalogopaises", id });
+    const pais = yield catalogopais_1.default.findByPk(id);
+    if (pais) {
+        res.json(pais);
+    }
+    else {
+        return res.status(404).json({ msg: `Pais no encontrado, id ${id}` });
+    }
 });
 exports.getCatalogopais = getCatalogopais;
 const postCatalogopais = (req, res) => __awaiter(void 0, void 0, void 0, function* () {

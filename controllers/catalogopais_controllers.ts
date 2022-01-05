@@ -1,13 +1,22 @@
 import {Request,Response} from 'express'
+import Pais from '../models/catalogopais';
 
 //TODO: crear los controladores
 export const getCatalogopaises = async (req: Request, res: Response) => {
-  res.json({ msg: "getCatalogopaises" });
+  const pais = await Pais.findAll();
+  res.json({ pais });
 };
 
 export const getCatalogopais = async (req: Request, res: Response) => {
   const { id } = req.params;
-  res.json({ msg: "getCatalogopaises", id });
+  
+  const pais = await Pais.findByPk(id);
+  if (pais){
+    res.json( pais );
+  }else{
+  return res.status(404).json({ msg: `Pais no encontrado, id ${id}` });	
+  }
+  
 };
 
 export const postCatalogopais = async (req: Request, res: Response) => {
