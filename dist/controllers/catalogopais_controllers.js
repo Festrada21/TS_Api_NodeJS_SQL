@@ -16,9 +16,22 @@ exports.deleteCatalogopais = exports.putCatalogopais = exports.postCatalogopais 
 const catalogopais_1 = __importDefault(require("../models/catalogopais"));
 //TODO: crear los controladores
 const getCatalogopaises = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const pais = yield catalogopais_1.default.findAll();
-    const contar = yield catalogopais_1.default.count();
-    res.json({ pais, contar });
+    const pais = yield catalogopais_1.default.findAll({
+        where: {
+            Habilitado: true
+        }
+    });
+    const habilitados = yield catalogopais_1.default.count({
+        where: {
+            Habilitado: true
+        }
+    });
+    const deshabilitados = yield catalogopais_1.default.count({
+        where: {
+            Habilitado: false
+        }
+    });
+    res.json({ pais, habilitados, deshabilitados });
 });
 exports.getCatalogopaises = getCatalogopaises;
 const getCatalogopais = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -61,14 +74,6 @@ const putCatalogopais = (req, res) => __awaiter(void 0, void 0, void 0, function
         if (!pais) {
             return res.status(404).json({ msg: `Pais no encontrado, id ${id}` });
         }
-        // const existe = await Pais.findOne({
-        //   where: {
-        //     Nombre: body.Nombre
-        //   }
-        // });
-        // if (existe) {
-        //   return res.status(400).json({ msg: `El pais ya existe llamado ${body.Nombre}` });
-        // }
         yield pais.update(body);
         res.json(pais).status(200);
     }

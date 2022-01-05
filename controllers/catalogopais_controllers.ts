@@ -3,9 +3,22 @@ import Pais from '../models/catalogopais';
 
 //TODO: crear los controladores
 export const getCatalogopaises = async (req: Request, res: Response) => {
-  const pais = await Pais.findAll();
-  const contar = await Pais.count();
-  res.json({ pais, contar });
+  const pais = await Pais.findAll({
+    where: {
+      Habilitado: true
+    }
+  });
+  const habilitados = await Pais.count({
+    where: {
+      Habilitado: true
+    }
+  });
+  const deshabilitados = await Pais.count({
+    where: {
+      Habilitado: false
+    }
+  });
+  res.json({ pais, habilitados,deshabilitados });
 };
 
 export const getCatalogopais = async (req: Request, res: Response) => {
@@ -48,15 +61,7 @@ export const putCatalogopais = async (req: Request, res: Response) => {
       const pais = await Pais.findByPk(id);
       if (!pais) {
         return res.status(404).json({ msg: `Pais no encontrado, id ${id}` });
-      }
-      // const existe = await Pais.findOne({
-      //   where: {
-      //     Nombre: body.Nombre
-      //   }
-      // });
-      // if (existe) {
-      //   return res.status(400).json({ msg: `El pais ya existe llamado ${body.Nombre}` });
-      // }
+      }   
       await pais.update(body);
       res.json(pais).status(200);
     } catch (err) {
